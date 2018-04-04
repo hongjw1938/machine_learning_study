@@ -1,11 +1,11 @@
-install.packages("readxl")
+#install.packages("readxl")
 library(readxl)
 
 student <- read_excel("C:/Users/student/Desktop/R/통계학/자료/source/빈도분석.xls")
 student
 attach(student)
 
-install.packages("descr")
+#install.packages("descr")
 library(descr)
 
 #도수분포표
