@@ -1,5 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 통계학
 =======================================
 
@@ -260,7 +258,7 @@
 >###    1. 가설검정과 유의수준
         1. 가설
             - 주어진 사실 혹은 조사하고자 하는 사실이 어떠하다는 주장 / 추측
-            - 귀무가설
+            - 귀무가설 : 기존에 받아들여지고 있던, 인정되고 있는 주장, 사실
             - 대립가설
         2. 검정
             - 양측검정
