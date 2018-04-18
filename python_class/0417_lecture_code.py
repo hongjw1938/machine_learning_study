@@ -156,13 +156,13 @@ Out[4]: [1, 2, 3, 4]
 
 # #### Dynamic references, strong types
 
-# In[1]:
+# In[61]:
 
 
 from IPython.core.interactiveshell import InteractiveShell
 
 
-# In[2]:
+# In[62]:
 
 
 InteractiveShell.ast_node_interactivity = 'all'  #아래 값을 연속적으로 출력함. 원래 기본값은 last
@@ -647,7 +647,7 @@ else:
     print 'Positive and larger than 5'
 
 
-# In[ ]:
+# In[30]:
 
 
 a = 5; b = 7
@@ -828,7 +828,7 @@ finally:
     f.close()
 
 
-# In[ ]:
+# In[29]:
 
 
 f = open(path, 'w')
@@ -1245,7 +1245,7 @@ list(reversed(range(10)))
 
 # ### Dict
 
-# In[ ]:
+# In[112]:
 
 
 empty_dict = {}
@@ -1253,7 +1253,7 @@ d1 = {'a' : 'some value', 'b' : [1, 2, 3, 4]}
 d1
 
 
-# In[ ]:
+# In[113]:
 
 
 d1[7] = 'an integer'
@@ -1261,30 +1261,31 @@ d1
 d1['b']
 
 
-# In[ ]:
+# In[114]:
 
 
 'b' in d1
 
 
-# In[ ]:
+# In[115]:
 
 
 d1[5] = 'some value'
 d1['dummy'] = 'another value'
 del d1[5]
+d1
 ret = d1.pop('dummy')
 ret
 
 
-# In[ ]:
+# In[116]:
 
 
-d1.keys()
+d1.keys()  #python3에서는 iterater 객체를 반환한다.
 d1.values()
 
 
-# In[ ]:
+# In[117]:
 
 
 d1.update({'b' : 'foo', 'c' : 12})
@@ -1293,15 +1294,19 @@ d1
 
 # #### Creating dicts from sequences
 
-# In[ ]:
+# In[120]:
 
 
 mapping = {}
+
+key_list = d1.keys()
+value_list = d1.values()
 for key, value in zip(key_list, value_list):
     mapping[key] = value
+mapping
 
 
-# In[ ]:
+# In[121]:
 
 
 mapping = dict(zip(range(5), reversed(range(5))))
@@ -1325,7 +1330,7 @@ else:
 value = some_dict.get(key, default_value)
 
 
-# In[ ]:
+# In[122]:
 
 
 words = ['apple', 'bat', 'bar', 'atom', 'book']
@@ -1340,8 +1345,19 @@ for word in words:
 
 by_letter
 
-by_letter.setdefault(letter, []).append(word)
-# In[ ]:
+
+# In[123]:
+
+
+by_letters = {}
+
+for word in words:
+    letter = word[0]
+    by_letters.setdefault(letter, []).append(word) #위의 if ~ else 코드를 1줄로 간단하게 사용할 수 있다. setdefault에 의해 구분됨.
+by_letters
+
+
+# In[125]:
 
 
 from collections import defaultdict
@@ -1350,10 +1366,36 @@ for word in words:
     by_letter[word[0]].append(word)
 
 
-# In[ ]:
+# In[126]:
 
 
 counts = defaultdict(lambda: 4)
+
+
+# In[127]:
+
+
+counts[1]
+
+
+# In[128]:
+
+
+dict(counts)
+
+
+# In[156]:
+
+
+counts = defaultdict(lambda: 4 )
+
+
+# In[157]:
+
+
+
+counts[5]
+dict(counts)
 
 
 # #### Valid dict key types
@@ -1383,7 +1425,7 @@ set([2, 2, 2, 1, 3, 3])
 {2, 2, 2, 1, 3, 3}
 
 
-# In[ ]:
+# In[148]:
 
 
 a = {1, 2, 3, 4, 5}
@@ -1394,12 +1436,12 @@ a - b  # difference
 a ^ b  # symmetric difference (xor)
 
 
-# In[ ]:
+# In[149]:
 
 
 a_set = {1, 2, 3, 4, 5}
-{1, 2, 3}.issubset(a_set)
-a_set.issuperset({1, 2, 3})
+{1, 2, 3}.issubset(a_set)   #a_set의 부분집합인지 확인
+a_set.issuperset({1, 2, 3}) #{1, 2, 3}을 a_set가 포함하는지 (superset)
 
 
 # In[ ]:
@@ -1410,46 +1452,77 @@ a_set.issuperset({1, 2, 3})
 
 # ### List, set, and dict comprehensions
 
-# In[ ]:
+# In[158]:
 
 
 strings = ['a', 'as', 'bat', 'car', 'dove', 'python']
 [x.upper() for x in strings if len(x) > 2]
 
 
-# In[ ]:
+# In[159]:
 
 
 unique_lengths = {len(x) for x in strings}
 unique_lengths
 
 
-# In[ ]:
+# In[160]:
 
 
 loc_mapping = {val : index for index, val in enumerate(strings)}
 loc_mapping
 
-loc_mapping = dict((val, idx) for idx, val in enumerate(strings)}
+
+# In[163]:
+
+
+loc_mapping = dict((val, idx) for idx, val in enumerate(strings))
+loc_mapping
+
+
 # #### Nested list comprehensions
 
-# In[ ]:
+# In[4]:
 
 
 all_data = [['Tom', 'Billy', 'Jefferson', 'Andrew', 'Wesley', 'Steven', 'Joe'],
             ['Susie', 'Casey', 'Jill', 'Ana', 'Eva', 'Jennifer', 'Stephanie']]
 
 
-# In[ ]:
+# In[8]:
+
+
+#중첩 리스트 내포를 사용하지 않고 순수하게 중첩 for loop를 사용한 예제
+names_of_interest = []
+for names in all_data:
+    enough_es = []
+    for name in names:
+        if name.count('e') >= 2:  
+            names_of_interest.append(name)
+names_of_interest
+
+
+# In[11]:
+
+
+#list comprehension에서 중첩 for loop를 사용한 예제
+names_of_interest = []
+enough_es = [name for names in all_data for name in names if name.count('e') >= 2]
+names_of_interest.extend(enough_es)
+names_of_interest
+
+
+# In[6]:
 
 
 names_of_interest = []
 for names in all_data:
-    enough_es = [name for name in names if name.count('e') > 2]
+    enough_es = [name for name in names if name.count('e') >= 2]
     names_of_interest.extend(enough_es)
+names_of_interest
 
 
-# In[ ]:
+# In[7]:
 
 
 result = [name for names in all_data for name in names
@@ -1457,7 +1530,7 @@ result = [name for names in all_data for name in names
 result
 
 
-# In[ ]:
+# In[12]:
 
 
 some_tuples = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
@@ -1465,7 +1538,7 @@ flattened = [x for tup in some_tuples for x in tup]
 flattened
 
 
-# In[ ]:
+# In[14]:
 
 
 flattened = []
@@ -1473,9 +1546,10 @@ flattened = []
 for tup in some_tuples:
     for x in tup:
         flattened.append(x)
+flattened
 
 
-# In[ ]:
+# In[21]:
 
 
 [[x for x in tup] for tup in some_tuples]
@@ -1502,7 +1576,7 @@ my_function(3.14, 7, 3.5)
 
 # ### Namespaces, scope, and local functions
 
-# In[ ]:
+# In[25]:
 
 
 def func():
@@ -1511,24 +1585,26 @@ def func():
         a.append(i)
 
 
-# In[ ]:
+# In[26]:
 
 
 a = []
 def func():
     for i in range(5):
         a.append(i)
+func()
+a
 
 
-# In[ ]:
+# In[28]:
 
 
 a = None
 def bind_a_variable():
-    global a
+    global a  #바깥에 선언된 변수 a임을 명시
     a = []
 bind_a_variable()
-print a
+print(a)
 
 
 # In[ ]:
@@ -1542,7 +1618,7 @@ def outer_function(x, y, z):
 
 # ### Returning multiple values
 
-# In[ ]:
+# In[33]:
 
 
 def f():
@@ -1552,6 +1628,7 @@ def f():
     return a, b, c
 
 a, b, c = f()
+a, b, c
 
 
 # In[ ]:
@@ -1560,7 +1637,7 @@ a, b, c = f()
 return_value = f()
 
 
-# In[ ]:
+# In[35]:
 
 
 def f():
@@ -1570,9 +1647,17 @@ def f():
     return {'a' : a, 'b' : b, 'c' : c}
 
 
+# In[36]:
+
+
+d = f()
+print(d)
+print(d['a'])
+
+
 # ### Functions are objects
 
-# In[ ]:
+# In[37]:
 
 
 
@@ -1580,7 +1665,7 @@ states = ['   Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda',
           'south   carolina##', 'West virginia?']
 
 
-# In[ ]:
+# In[55]:
 
 
 import re  # Regular expression module
@@ -1588,28 +1673,21 @@ import re  # Regular expression module
 def clean_strings(strings):
     result = []
     for value in strings:
-        value = value.strip()
-        value = re.sub('[!#?]', '', value) # remove punctuation
-        value = value.title()
+        value = value.strip()             #좌우 공백 제거
+        #value = str.strip(value)           # 윗 줄 함수와 같음.
+        value = re.sub('[!#?]', '', value) # remove punctuation, 특정 값을 찾고 싶은 경우 find 함수 사용
+        value = value.title()              # 첫 글자를 대문자로 만듦           
         result.append(value)
     return result
 
 
-# In[ ]:
+# In[56]:
 
 
 clean_strings(states)
-Out[15]:
-['Alabama',
- 'Georgia',
- 'Georgia',
- 'Georgia',
- 'Florida',
- 'South Carolina',
- 'West Virginia']
 
 
-# In[ ]:
+# In[45]:
 
 
 def remove_punctuation(value):
@@ -1621,51 +1699,37 @@ def clean_strings(strings, ops):
     result = []
     for value in strings:
         for function in ops:
-            value = function(value)
-        result.append(value)
+            value = function(value)  #ops에 전달된 함수를 각각 수행하고 다시 value에 저장 
+                                     #str.strip(value), remove_punctuation(value), str.title(value)와 같음
+        result.append(value)         
     return result
 
 
-# In[ ]:
+# In[46]:
 
 
 clean_strings(states, clean_ops)
-Out[22]:
-['Alabama',
- 'Georgia',
- 'Georgia',
- 'Georgia',
- 'Florida',
- 'South Carolina',
- 'West Virginia']
 
 
 # In[ ]:
 
 
-map(remove_punctuation, states)
-Out[23]:
-['   Alabama ',
- 'Georgia',
- 'Georgia',
- 'georgia',
- 'FlOrIda',
- 'south   carolina',
- 'West virginia']
+map(remove_punctuation, states)  #map함수는 collection에 대해 함수를 지정해줌.
 
 
 # ### Anonymous (lambda) functions
 
-# In[ ]:
+# In[58]:
 
 
 def short_function(x):
     return x * 2
 
 equiv_anon = lambda x: x * 2
+equiv_anon(2)
 
 
-# In[ ]:
+# In[60]:
 
 
 def apply_to_list(some_list, f):
@@ -1690,7 +1754,18 @@ strings
 
 # ### Closures: functions that return functions
 
-# In[ ]:
+# In[72]:
+
+
+gv = 10
+def print_gv(x):
+    gv = 100
+    print(x * gv)
+print_gv(2)
+gv
+
+
+# In[79]:
 
 
 def make_closure(a):
@@ -1698,10 +1773,19 @@ def make_closure(a):
         print('I know the secret: %d' % a)
     return closure
 
-closure = make_closure(5)
+cl = make_closure(5)
 
 
-# In[ ]:
+# In[111]:
+
+
+cl
+type(cl)
+closure()
+cl()
+
+
+# In[82]:
 
 
 def make_watcher():
@@ -1717,12 +1801,34 @@ def make_watcher():
     return has_been_seen
 
 
-# In[ ]:
+# In[83]:
 
 
 watcher = make_watcher()
 vals = [5, 6, 1, 5, 1, 6, 3, 5]
 [watcher(x) for x in vals]
+
+
+# In[99]:
+
+
+def make_counter1():
+    count = 0
+    def counter():  
+        count += 1  #closure에서는 외부 변수에 값을 대입하게 되면 에러가 발생함.
+        return count
+    return counter
+
+
+# In[100]:
+
+
+counter1 = make_counter1()
+counter1()
+
+
+# In[98]:
+
 
 def make_counter():
     count = [0]
@@ -1733,17 +1839,27 @@ def make_counter():
     return counter
 
 counter = make_counter()
-# In[ ]:
+counter()
+
+
+# In[101]:
+
+
+counter()
+counter()  #counter()를 여러 번 호출시 내부에  += 1 에 의해 증가.
+
+
+# In[102]:
 
 
 def format_and_pad(template, space):
     def formatter(x):
-        return (template % x).rjust(space)
+        return (template % x).rjust(space)  #우측정렬, rjust
 
     return formatter
 
 
-# In[ ]:
+# In[103]:
 
 
 fmt = format_and_pad('%.4f', 15)
@@ -1760,12 +1876,12 @@ d = kwargs.get('d', d_default_value)
 e = kwargs.get('e', e_default_value)
 
 
-# In[ ]:
+# In[112]:
 
 
-def say_hello_then_call_f(f, *args, **kwargs):
-    print 'args is', args
-    print 'kwargs is', kwargs
+def say_hello_then_call_f(f, *args, **kwargs):  #가변인자, *가 한개면 입력되는 parameter를 튜플로, **가 두 개면 입력되는 parameter 사전으로
+    print('args is', args)
+    print('kwargs is', kwargs)
     print("Hello! Now I'm going to call %s" % f)
     return f(*args, **kwargs)
 
@@ -1773,29 +1889,29 @@ def g(x, y, z=1):
     return (x + y) / z
 
 
-# In[ ]:
+# In[113]:
 
 
- say_hello_then_call_f(g, 1, 2, z=5.)
-args is (1, 2)
-kwargs is {'z': 5.0}
-Hello! Now I'm going to call <function g at 0x2dd5cf8>
-Out[8]: 0.6
+say_hello_then_call_f(g, 1, 2, z=5.)  #위의 가변인자에 따라 g는 f에, 1, 2는 *args에, z=5. kwargs에 입력됨.
+# args is (1, 2)
+# kwargs is {'z': 5.0}
+# Hello! Now I'm going to call <function g at 0x2dd5cf8>
 
 
 # ### Currying: partial argument application
 
-# In[ ]:
+# In[115]:
 
 
 def add_numbers(x, y):
     return x + y
 
 
-# In[ ]:
+# In[117]:
 
 
-add_five = lambda y: add_numbers(5, y)
+add_five = lambda y: add_numbers(5, y)  #인자를 2개 보내야 하는데 하나를 고정하고 싶은 경우
+add_five(10)  #이와 같이 y값만 전달하면 된다. 이를 2번째 인자가 curry되었다고 표현한다.
 
 
 # In[ ]:
@@ -1817,56 +1933,68 @@ data.apply(ma60)
 
 # ### Generators
 
-# In[ ]:
+# In[123]:
 
 
 some_dict = {'a': 1, 'b': 2, 'c': 3}
 for key in some_dict:
-    print key,
+    print(key, )
 
 
-# In[ ]:
+# In[124]:
 
 
-dict_iterator = iter(some_dict)
+dict_iterator = iter(some_dict) #iterater 객체 반환
 dict_iterator
 
 
-# In[ ]:
+# In[125]:
 
 
 list(dict_iterator)
 
 
-# In[ ]:
+# In[135]:
+
+
+def squares2(n=10):
+    for i in range(1, n + 1):
+        print('Generating squares from 1 to %d' % (n ** 2))
+        return i ** 2 #return은 값을 바로 보여줌
+
+
+# In[143]:
 
 
 def squares(n=10):
-    for i in xrange(1, n + 1):
-        print 'Generating squares from 1 to %d' % (n ** 2)
-        yield i ** 2
+    for i in range(1, n + 1):
+        print('Generating squares from 1 to %d' % (n ** 2))
+        yield i ** 2  #값을 요구하면 보여줌
 
 
-# In[ ]:
+# In[144]:
 
 
 gen = squares()
-
 gen
-Out[3]: <generator object squares at 0x34c8280>
+type(gen)
 
 
-# In[ ]:
+# In[137]:
+
+
+gen2 = squares2()
+gen2      #이처럼 return을 하게 되면 바로 for문을 빠져나가기 때문에 yield를 사용해야 한다. 순차적인 값을 요청할 때만 사용.
+
+
+# In[145]:
 
 
 for x in gen:
-    print x,
-
-Generating squares from 0 to 100
-1 4 9 16 25 36 49 64 81 100
+     print(x) #이와 같이 값을 요쳥해야 한다.
 
 
-# In[ ]:
+# In[146]:
 
 
 def make_change(amount, coins=[1, 5, 10, 25], hand=None):
@@ -1883,42 +2011,43 @@ def make_change(amount, coins=[1, 5, 10, 25], hand=None):
             yield result
 
 
-# In[ ]:
+# In[148]:
 
 
 for way in make_change(100, coins=[10, 25, 50]):
-    print way
+    print(way)
 len(list(make_change(100)))
 
 
 # #### Generator expresssions
 
-# In[ ]:
+# In[149]:
 
 
-gen = (x ** 2 for x in xrange(100))
+gen = (x ** 2 for x in range(100))
 gen
 
 
-# In[ ]:
+# In[153]:
 
 
 def _make_gen():
-    for x in xrange(100):
+    for x in range(100):
         yield x ** 2
 gen = _make_gen()
+list(gen)
 
 
-# In[ ]:
+# In[152]:
 
 
-sum(x ** 2 for x in xrange(100))
-dict((i, i **2) for i in xrange(5))
+sum(x ** 2 for x in range(100))
+dict((i, i **2) for i in range(5))
 
 
 # #### itertools module
 
-# In[ ]:
+# In[155]:
 
 
 import itertools
@@ -1927,43 +2056,44 @@ first_letter = lambda x: x[0]
 names = ['Alan', 'Adam', 'Wes', 'Will', 'Albert', 'Steven']
 
 for letter, names in itertools.groupby(names, first_letter):
-    print letter, list(names) # names is a generator
+    print(letter, list(names)) # names is a generator
 
 
 # ## Files and the operating system
 
-# In[ ]:
+# In[156]:
 
 
 path = 'ch13/segismundo.txt'
 f = open(path)
 
 
-# In[ ]:
+# In[157]:
 
 
 for line in f:
     pass
 
 
-# In[ ]:
+# In[158]:
 
 
 lines = [x.rstrip() for x in open(path)]
 lines
 
 
-# In[ ]:
+# In[159]:
 
 
-with open('tmp.txt', 'w') as handle:
+with open('tmp.txt', 'w') as handle:  #with ~ as를 사용하면  파일 객체를 as뒤의 변수에 넣는다.
     handle.writelines(x for x in open(path) if len(x) > 1)
 
 open('tmp.txt').readlines()
 
 
-# In[ ]:
+# In[161]:
 
 
+import os  #os 모듈을 이용해 삭제할 수 있음.
 os.remove('tmp.txt')
 
