@@ -1913,7 +1913,9 @@ def add_numbers(x, y):
 add_five = lambda y: add_numbers(5, y)  #인자를 2개 보내야 하는데 하나를 고정하고 싶은 경우
 add_five(10)  #이와 같이 y값만 전달하면 된다. 이를 2번째 인자가 curry되었다고 표현한다.
 
-
+#Y값을 고정하고 싶은 경우
+add_y_square = partial(add_numbers, y=3) # 즉, 이런식으로 키워드를 지정해 주면 y값만 고정시킬 수 있다.
+add_y_square(10)
 # In[ ]:
 
 
