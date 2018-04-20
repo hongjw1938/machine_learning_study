@@ -49,3 +49,72 @@
                 - columns 속성에 list형으로 값을 넣으면 분리되어 column의 label이 지정됨
             * 데이터프레임과 Series간의 연산
                 - 브로드캐스팅 규칙에 의해 연산됨                
+        5. 함수적용과 매핑
+            - pandas 객체도 Numpy의 유니버설 함수(배열의 각 원소에 적용되는 메서드)를 적용할 수 있다.
+            - 각 로우나 칼럼의 1차원 배열에 함수를 적용할 수 있다. apply메서드 통해 수행 가능
+            * dataframe의 경우는 로우나 컬럼을 잘라서 함수에 적용시킨 다음 결과를 Series 혹은 dataframe으로 만들어 반환한다.
+                - 함수가 scalar를 내보내는 경우 Series로 내보낸다.
+                - 어떤 축을 기준으로 할지는 axis parameter값을 주면 지정할 수 있다.
+            * Series의 경우는 Series의 값들을 함수적용해서 Series 혹은 dataframe으로 반환한다.
+            * applymap
+                - applymap함수는 apply기능과 map함수의 기능이 들어가 있음
+                - dataframe에 대해서 각 Series의 각 원소에 적용할 함수를 지정하고 모아서 dataframe으로 return하낟.
+            * map함수
+                * 파이썬의 map함수를 리뷰해보자
+                    - 파이썬은 R처럼 recycling규칙이 없어서 list에 대해 각각의 연산을 단순 수행할 수 없다.
+                    - 따라서 for loop를 이용하거나 map함수를 이용해야 한다.
+            - 정리
+                - apply()함수는 Dataframe, Series를 모두 반환할 수 있다.
+                        - 인자로 받는 함수 : 집계 또는 통계 계열 함수
+                - applymap()함수는 dataframe을 반환한다.
+                        - 인자로 받는 함수 : 일반 함수
+                - map함수는 Series를 반환한다.
+        6. 정렬과 순위
+            - sort_index메서드 : 로우나 칼럼의 색인이 알파벳 순으로 정렬된 새로운 객체 반환
+            * 순위
+                - rank()
+                    - 같은 값의 경우는 등수에 평균을 내서 계산함
+                    - method='first'로 지정시, 같은 값이 있으면 먼저 나온 값이 우선 등수를 차지함
+        7. 중복색인
+            - 색인은 반드시 유니크하지 않아도 된다. 즉 강제사항이 아님
+            - 이에 따라 여러 중복색인이 있을 때, 특정 index의 값을 출력하면 그 경우 반환 타입도 Series이다.
+>###    4. 기술통계 계산과 요약
+        - pandas 개게는 일반적 수학 메서드와 통계 메서드를 가짐
+        - 처음부터 누락 데이터는 제외하여 연산함
+        1. 상관관계와 공분산
+            - pandas_datareader 패키지(외부 확장 모듈)을 설치해야 한다.
+            - As of v0.6.0 Yahoo!, Google Options, Google Quotes and EDGAR have been immediately deprecated due to large changes in their API and no stable replacement.
+            - 위 설명에 따라, 0.6.0버젼부터 Google, Yahoo등 관련 라이브러리가 완전 deprecated되었음
+            - 따라서 교재에 있는 데이터를 사용해서 예제를 활용할 수가 없다.
+            - corr()은 상관계수, cov()는 공분산을 반환한다.
+            - corrwith()는 다른 Series나 DataFrame과의 상관관계를 계산함. Series를 넘기면 각 칼럼에 대해 계산한 상관관계를 담은 Series를 반환
+        2. 유일 값, 값 세기, 멤버쉽
+            - Series에 담긴 값의 정보 추출 하는 메서드 사용
+>###    5. 누락 데이터 처리
+        - pandas 모듈은 누락 데이터를 전부 NaN으로 취급함.
+        - None값 또한 NaN으로 취급한다.
+        1. 누락 데이터 골라내기
+            - dropna를 사용하는 것이 매우 유용함
+            - Series에 대해 dropna를 적용시 실제 데이터가 들어있는 색인 값과 데이터를 Series값으로 반환
+        2. 누락 값 채우기
+            - fillna메서드를 활용해 구멍을 메울 수 있다.
+            - 새로운 객체를 반환함. inplace를 사용하면 기존 객체 변환.
+>###    6. 계층적색인
+        - 축에 대해 다중 색인 단계를 지정할 수 있다.
+        - 차원이 높은 데이터를 낮은 차원의 형식으로 다룰 수 있다.
+        * stack, unstack
+            - row, column의 index를 양쪽으로 위치 변경함.
+            - level=-1이 default이며 이는 가장 하위 인덱스를 의미한다.
+        1. 계층 순서 바꾸고 정렬하기
+            - swaplevel : 넘겨받은 2개의 계층 번호나 이름이 뒤바뀐 새로운 객체 반환(데이터는 변경되지 안흥ㅁ)
+        2. 단계별 요약통계      
+            - 기술통계, 요약통계는 level옵션을 가짐. 이는 어떤 한 축에 대해 합을 구하고 싶은 단계를 지정할 수 있는 옵션임.
+        3. 데이터프레임의 칼럼 사용하기
+            - index를 칼럼으로, 혹은 반대로 이동가능.
+>###    7. pandas와 관련된 기타 주제
+            1. 정수색인
+                - 정수가 인덱스일 때 단순히 정수를 이용해 색인하면 에러가 발생할 수 있다. 레이블로 인식하기 때문
+                - 정수가 인덱스가 아니라면 문제가 없다.
+            2. panel 데이터
+                - panel : 3차원 데이터 프레임
+                - 더 이상 지원되지 않음.

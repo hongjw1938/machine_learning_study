@@ -355,3 +355,331 @@ series3
 
 frame - series3 # 데이터 프레임은 열(0번축)으로 연산을 진행하는데 Utah, Ohio, Texas, Oregon이 없으니까 이에 대해 추가하고 나머지도 없으니 NaN이 된 것
 frame.sub(series3, axis=0) #뺄셈을 적용하는데 적용하는 축 방향을 지정함.
+
+
+
+##함수 적용과 매핑
+frame = DataFrame(np.random.randn(4, 3), columns=list('bde'),
+                  index=['Utah', 'Ohio', 'Texas', 'Oregon'])
+                  
+frame
+np.abs(frame) # 각 배열의 원소에 절대치가 적용되었음. 내부적으로 반복문이 수행되기 때문
+
+#람다함수를 만들고 변수에 넣었음. 이러면 이름이 있는 함수.
+f = lambda x: x.max() - x.min()
+test = np.array([1, 2, 3, 4])
+f(test) #이와 같이 사용할 수 있다.
+
+
+#pandas의 apply함수 적용 이는 dataframe의 apply함수임.
+#row 혹은 column으로 쪼개서 apply메서드에 의해 내부에 인자로 들어온 함수를 적용시키게 된다.
+frame.apply(f)
+
+#1번 축 방향으로 함수 적용함.
+frame.apply(f, axis=1)
+
+#이 경우는 Series형태로 리턴함. 0번축 기준으로 각 column에 대해 Series로 index를 주기 때문에 dataframe으로 리턴됨.
+def f(x):
+    return Series([x.min(), x.max()], index=['min', 'max'])
+frame.apply(f)
+
+format = lambda x: '%.2f' % x
+
+#실수값을 문자열 포맷으로 변경
+frame.applymap(format)
+
+
+#실수값을 문자열 포맷으로 변경
+format = lambda x: '%.2f' % x
+frame.applymap(format)
+'%.2f, %s' % (3.141592, 'Hello')
+
+#map함수
+
+#python의 map 함수 리뷰
+l = [1, 3, 4, 2]
+def f1(x):
+    return x ** 2 - 3*x
+    
+#l ** 2  # R은 recycling 규칙이 있어서 가능하지만 파이썬은 그러한 규칙이 없어서 불가능하다. 
+#그래서 위의 f1함수도 f1(l)처럼 사용할 수가 없다.
+#따라서 for loop를 이용한 방법을 사용할 수 있다. (해결방법 1)
+result = []
+for x in l:
+    result.append(x ** 2 - 3*x)
+    
+result
+
+#혹은 map함수를 이용할 수 있다. (해결방법2)
+result = list(map(f1, l))
+result
+
+
+#Series의 map 메서드
+type(frame['e'])
+#e컬럼 즉, Series에 map함수로 함수 인자를 주면 Series의 각 원소에 함수가 적용되어 반환된다. 
+frame['e'].map(format)
+
+##정렬과 순위
+
+obj = Series(range(4), index=['d', 'a', 'b', 'c'])
+obj
+#원본 데이터는 변경되지 않음.
+obj.sort_index()
+obj
+
+frame = DataFrame(np.arange(8).reshape((2, 4)), index=['three', 'one'],
+                  columns=['d', 'a', 'b', 'c'])
+frame.sort_index()
+
+frame.sort_index(axis=1) # 1번축 기준 알파벳 정렬
+
+frame.sort_index(axis=1, ascending=False) #내림차순 정렬 가능
+
+#sort_index는 deprecate warning이 있으므로 sort_values사용
+#frame.sort_index(by='b')
+#frame.sort_values() 오류남
+frame.sort_values(by='b')
+
+#frame.sort_index(by=['a', 'b'])
+#a 컬럼 우선 정렬
+frame.sort_values(by=['a', 'b'])
+
+
+#순위
+obj = Series([4, 7, -3, 2])
+obj.rank()
+
+obj = Series([7, -5, 7, 4, 2, 0, 4])
+obj.rank() #같은 값이 여러개 있으면 등수를 평균하여 계산.
+
+obj.rank(method='first') #rank를 정하는데 같은 값이 나오면 먼저 나온 value가 등수가 높다.
+
+obj
+obj.rank(ascending=False, method='max') # 큰 값이 등수가 높으며 같은 값의 경우 등수가 같음. 이 때 갯수만큼 등수가 내려감.
+
+frame.rank(axis=0) #등수 평균을 냈기 때문에 1.5, 3.5등이 나옴.
+frame.rank(axis=1)
+
+##중복색인
+
+obj = Series(range(5), index=['a', 'a', 'b', 'b', 'c'])
+obj
+
+
+obj.index.is_unique #색인이 유니크 한지 확인하는 bool 반환
+obj['a'] #Series에서 값이 2개가 나왔으니 반환도 Series
+obj['c']
+
+df = DataFrame(np.random.randn(4, 3), index=['a', 'a', 'b', 'b'])
+df
+df.loc['b']
+df.iloc[2:]
+
+
+##기술통계 계산과 요약
+df = DataFrame([[1.4, np.nan], [7.1, -4.5],
+                [np.nan, np.nan], [0.75, -1.3]],
+               index=['a', 'b', 'c', 'd'],
+               columns=['one', 'two'])
+df
+
+df.sum() #축이 생략되어서 axis=0가 default, NaN값은 무시하고 계산된다.
+df.sum(axis=1)
+
+df.mean(axis=1, skipna=False) #누락 데이터를 제외하지 않고 연산한다.
+
+df.idxmax() #최대값을 가지는 색인 반환
+df.max()
+df.loc[['b', 'd']]
+
+df.cumsum() #누적 합.
+df.describe() #갯수, 평균, 표준편차, 최소값, 분위수, 최대값을 보여줌
+
+obj = Series(['a', 'a', 'b', 'c'] * 4)
+obj.describe() #데이터가 명목척도와 같으면 평균등을 구할 수 없다. 따라서 빈도수, unique값, 최빈 값등을 연산해서 리턴한다.
+
+
+##유일 값, 값 세기, 멤버쉽
+obj = Series(['c', 'a', 'd', 'a', 'a', 'b', 'b', 'c', 'c'])
+
+uniques = obj.unique()
+uniques
+
+obj.value_counts()
+
+pd.value_counts(obj.values, sort=False)
+
+mask = obj.isin(['b', 'c'])
+mask
+
+obj[mask]
+
+
+data = DataFrame({'Qu1': [1, 3, 4, 3, 4],
+                  'Qu2': [2, 3, 1, 2, 3],
+                  'Qu3': [1, 5, 2, 4, 4]})
+data
+
+result = data.apply(pd.value_counts).fillna(0) #fillna는 비어있는 값을 채워주는 함수
+result
+
+
+####누락 데이터 처리
+
+string_data = Series(['aardvark', 'artichoke', np.nan, 'avocado'])
+string_data
+
+
+string_data.isnull()
+
+
+##누락 데이터 골라내기
+from numpy import nan as NA
+data = Series([1, NA, 3.5, NA, 7])
+data.dropna() #실제 들어있는 색인 및 데이터를 Series로 반환
+
+
+data
+data[data.notnull()]
+
+data = DataFrame([[1., 6.5, 3.], [1., NA, NA],
+                  [NA, NA, NA], [NA, 6.5, 3.]])
+cleaned = data.dropna() #data에서 NaN값을 drop함.
+data
+
+cleaned
+
+data.dropna(how='all') #모든 값들이 NaN일 때만 로우를 드랍하고 하나라도 NaN이 아니면 남겨둔다.
+
+data[4] = NA #컬럼4의 Series값들을 전부 NaN으로 변경
+data
+
+data.dropna(axis=1, how='all') #1번축에 대해서 전체 값이 NaN인 컬럼을 드랍
+
+df = DataFrame(np.random.randn(7, 3))
+df.iloc[:4, 1] = NA; df.iloc[:2, 2] = NA
+df
+df.dropna(thresh=3) #thresh는 기준값, NaN이 3개 이하이면 drop
+
+
+##누락 값 채우기
+df.fillna(0)
+
+
+df.fillna({1: 0.5, 3: -1}) #column index를
+# always returns a reference to the filled object
+_ = df.fillna(0, inplace=True) #기존 객체를 변경함. 원래는 새로운 객체 반환 
+df
+
+df = DataFrame(np.random.randn(6, 3))
+df.iloc[2:, 1] = NA; df.iloc[4:, 2] = NA
+df
+
+df.fillna(method='ffill') # 앞에 있는 값으로 채움. 0번축 기준.
+
+df.fillna(method='ffill', limit=2) # limit옵션을 통해 최대 몇 개까지 채울 건지 지정 가능
+
+data = Series([1., NA, 3.5, NA, 7])
+data.fillna(data.mean()) #fillna를 하는데 계산을 통해 나온 평균 값으로 채워라는 의미
+
+#퀴즈: df 데이터 프레임에서 각 컬럼의 NaN값을 해당 컬럼의 평균값으로 채우세요.
+df.fillna({0: df.iloc[:,0].mean(), 1: df.iloc[:, 1].mean(), 2: df.iloc[:, 2].mean()})
+
+#혹은
+df.fillna(df.mean())
+
+
+###계층적색인
+
+data = Series(np.random.randn(10),
+              index=[['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'd', 'd'],
+                     [1, 2, 3, 1, 2, 3, 1, 2, 2, 3]])
+data #multiindex를 색인으로 하는 Series임.
+
+data.index
+type(data.index) #Multiindex 객체임을 알 수 있다.
+
+data['b'] # 상위 Index인 b의 하위 인덱스 및 값이 반환된다.
+data['b':'c'] #end point도 반환됨
+
+data.loc[['b', 'd']]
+
+data[:, 2] #하위 계층 인덱스 선택 가능
+
+data.unstack() #index를 옮겨줌. 하위 인덱스를 로우로 옮겨줌. default는 level=-1이다. 가장 하위 level을 의미함.data.unstack() #index를 옮겨줌. 하위 인덱스를 로우로 옮겨줌
+data.unstack().stack() #stack은 로우에 있는 인덱스를 컬럼쪽으로 옮김
+
+frame = DataFrame(np.arange(12).reshape((4, 3)),
+                  index=[['a', 'a', 'b', 'b'], [1, 2, 1, 2]],
+                  columns=[['Ohio', 'Ohio', 'Colorado'],
+                           ['Green', 'Red', 'Green']])
+frame
+
+#이름지정 가능
+frame.index.names = ['key1', 'key2']
+frame.columns.names = ['state', 'color']
+frame
+
+frame['Ohio']
+MultiIndex.from_arrays([['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']],
+                       names=['state', 'color'])
+                       
+##계층순서 바꾸고 정렬하기
+frame.swaplevel('key1', 'key2')
+frame.sortlevel(1)
+frame.swaplevel(0, 1).sortlevel(0)
+
+frame.sortlevel(1) #예전 방식임. 단일 계층에 속한 데이터를 정렬함. 사전식으로 정렬함.
+frame.swaplevel(0, 1).sortlevel(0)
+
+
+##단계별 요약통계
+
+frame.sum(level='key2') #key2에 따라 합을 구함.
+frame.sum(level='color', axis=1) #color를 기준으로 어떤 축에 대해 더할지 지정.
+
+
+
+##데이터프레임의 칼럼 사용하기
+frame = DataFrame({'a': range(7), 'b': range(7, 0, -1),
+                   'c': ['one', 'one', 'one', 'two', 'two', 'two', 'two'],
+                   'd': [0, 1, 2, 0, 1, 2, 3]})
+frame
+
+frame2 = frame.set_index(['c', 'd']) #index를 지정하는 함수 즉, c, d컬럼의 값을 index로 지정함.
+frame2
+
+frame.set_index(['c', 'd'], drop=False)
+
+frame2.reset_index() #index를 다시 컬럼으로 보냄.
+
+
+###pandas와 관련된 기타 주제
+
+
+## 정수 색인
+ser = Series(np.arange(3.))
+ser
+
+ser.iloc[-1]
+#ser[-1] #indexing할 때 정수값을 주면 레이블로 인식하기 때문에 찾지 못하게 된다.
+
+
+ser2 = Series(np.arange(3.), index=['a', 'b', 'c'])
+ser2
+ser2[-1] #정수색인이 아니어서 문제가 없다.
+
+ser2.iloc[:1]
+
+ser3 = Series(range(3), index=[-5, 1, 3])
+ser3.iloc[2] #3번째 데이터의 의미
+
+frame = DataFrame(np.arange(6).reshape((3, 2)), index=[2, 0, 1])
+frame
+
+frame.iloc[0]
+frame[0] #첫 번째 column을 반환
+
+
+## panel 데이터
