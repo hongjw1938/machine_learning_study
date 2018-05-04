@@ -164,3 +164,14 @@
             - 현재 pandas_datareader클래스가 deprecated된 상태
             - http://excelsior-cjh.tistory.com/109 해당 내용 참조
             
+            - matplotlib_Drawing_Graph2.py참조
+            - df['MA20'] = df['close'].rolling(window=20).mean()
+            - df['MA60'] = df['close'].rolling(window=60).mean()
+            - 위 코드는 pandas의 DataFrame의 rolling함수
+                * https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.rolling.html참조
+                >> rolling함수
+                    - Provides rolling window calculations.
+                    - 인자로 1번째는 window의 크기를 받는다. : 데이터의 개수. 20이면 20개씩
+                    - 즉, 위의 코드는 20일치, 60일치의 데이터를 받아서 20일, 60일 이동평균을 구할 수 있다.
+                    
+            - datareader_test.py를 참조하면 datareader가 데이터를 읽고, 관련 데이터 프레임을 확인할 수 있다.
