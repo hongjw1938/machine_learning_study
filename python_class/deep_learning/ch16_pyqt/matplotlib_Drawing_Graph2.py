@@ -24,7 +24,10 @@ class MyWindow(QWidget):
 
         self.fig = plt.Figure()
         self.canvas = FigureCanvas(self.fig)
-
+        
+        #Activate also when enter key is pressed at QLineEdit
+        self.lineEdit.returnPressed.connect(self.pushButtonClicked)
+        
         leftLayout = QVBoxLayout()
         leftLayout.addWidget(self.canvas)
 
