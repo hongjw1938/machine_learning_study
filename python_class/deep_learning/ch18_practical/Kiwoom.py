@@ -122,14 +122,16 @@ class Kiwoom(QAxWidget):
         self.opw00018_output['single'].append(Kiwoom.change_format(total_eval_price))
         self.opw00018_output['single'].append(Kiwoom.change_format(total_eval_profit_loss_price))
 
-        total_earning_rate = Kiwoom.change_format(total_earning_rate)
+        total_earning_rate = Kiwoom.change_format2(total_earning_rate)
 
-        if self.get_server_gubun():
-            total_earning_rate = float(total_earning_rate) / 100
-            total_earning_rate = str(total_earning_rate)
+        # if self.get_server_gubun():
+        #     total_earning_rate = float(total_earning_rate) / 100
+        #     total_earning_rate = str(total_earning_rate)
 
-        self.opw00018_output['single'].append(Kiwoom.change_format(total_earning_rate))
+        self.opw00018_output['single'].append(Kiwoom.change_format2(total_earning_rate))
         self.opw00018_output['single'].append(Kiwoom.change_format(estimated_deposit))
+
+        print(self.opw00018_output['single'])
 
         #multi data
         rows = self._get_repeat_cnt(trcode, rqname)
@@ -144,8 +146,8 @@ class Kiwoom(QAxWidget):
             quantity = Kiwoom.change_format(quantity)
             purchase_price = Kiwoom.change_format(purchase_price)
             current_price = Kiwoom.change_format(current_price)
-            eval_profit_loss_price = Kiwoom.change_format(eval_profit_loss_price)
-            earning_rate = Kiwoom.change_format(earning_rate)
+            eval_profit_loss_price = Kiwoom.change_format2(eval_profit_loss_price)
+            earning_rate = Kiwoom.change_format2(earning_rate)
 
             self.opw00018_output['multi'].append([name, quantity, purchase_price, current_price, eval_profit_loss_price, earning_rate])
 
