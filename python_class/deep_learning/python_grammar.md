@@ -13,3 +13,42 @@
             width ::= integer
             precision ::= integer
             type ::= "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
+        * 예시
+            >>> format('ABCDEFG', '<30')
+            'ABCDEFG                       '
+            
+            >>> format('ABCDEFG', '>30')
+            '                       ABCDEFG'
+            
+            >>> format('ABCDEFG', '^30')
+            '           ABCDEFG            '
+            
+            >>> format(1234567890, '+')
+            '+1234567890'
+            
+            >>> format(1234567890, '-')
+            '1234567890'
+            
+            >>> format(1234567890, ' ')
+            ' 1234567890'
+            
+            >>> format(1234567890, ',')
+            '1,234,567,890'
+            
+            >>> format(0xABDC1234)
+            '2883326516'
+            
+            >>> format(0xABDC1234, 'b')
+            '10101011110111000001001000110100'
+            
+            >>> format(0xABDC1234, 'x')
+            'abdc1234'
+            
+            >>> format(0xABDC1234, 'X')
+            'ABDC1234'
+            
+            >>> format(0xABDC1234, 'n')
+            '2883326516'
+            
+            >>> format(0xABDC1234, 'o')
+            
