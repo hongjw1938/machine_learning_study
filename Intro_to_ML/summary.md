@@ -42,6 +42,14 @@ attribute가 다르다.
         - 예를 들어, 특정 email의 text를 분석하여 누가 보낸 것인지 알려고 한다고 가정한다.
         - 이를 통해서 어떤 word가 쓰였는지 확인하여 누가 쓴 것일지 예측할 수 있을 것이다. 그러나 왜 Naive라고 불리는 것일까
         - 해당 text의 frequency만 판단재료로 쓰이고 order와 같은 다른 중요할 수 있는 관련 변수를 사용하지 않기 때문이다.
+        - 장점
+            - Sector가 여러 개인 Multi-Sector 데이터 Set인 경우 해당 분류가 매우 쉽고 빠름
+            - 독립이라는 가정이 성립 시에, 학습 결과가 좋으며, 필요 데이터량도 적어짐
+            - 수치형 데이터보다 범주형 데이터에 효과적
+        - 단점
+            - 학습 데이터에는 없고 실험 데이터에는 있는 경우 "zero frequency"가 되어 확률이 0이므로 정상적인 분류가 안된다.
+            - 데이터가 독립이라는 가정이 현실에서 적용되지 않는 경우가 더 많아, 실질적인 사용에 어려움
+            - 독립이 아닐 경우, 결과에 대한 신뢰성이 떨어짐
     - Gaussian NB
         - Python의 sklearn이라는 library에 존재함.
         - <a href="http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html">참조</a>
